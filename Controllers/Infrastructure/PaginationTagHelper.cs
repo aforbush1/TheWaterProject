@@ -28,6 +28,13 @@ namespace TheWaterProject.Controllers.Infrastructure
         public string? PageAction { get; set; }
         public PaginationInfo PageModel { get; set; }
 
+        // Below are options that we can include in our Tag helper in index
+        public bool PageClassEnabled { get; set; } = false;
+        public string PageClass { get; set; } = String.Empty;
+        public string PageClassNormal { get; set; } = String.Empty;
+        public string PageClassSelected { get; set; } = String.Empty;
+
+
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
             // Checks to see if ViewContext has information and the PageModel is not null (Hover over to see information)
@@ -43,6 +50,13 @@ namespace TheWaterProject.Controllers.Infrastructure
                 {
                     TagBuilder tag = new TagBuilder("a");
                     tag.Attributes["href"] = urlHelper.Action(PageAction, new { pageNum = i });
+
+                    if (PageClassEnabled)
+                    {
+                        tag.AddCssClass(PageClass);
+                        tag.AddCssClass(i == PageModel.CurrentPage ? PageClassSelected : PageClassNormal);
+                    }
+
                     tag.InnerHtml.Append(i.ToString());
 
                     // It's then going to append the result to <div> tags
